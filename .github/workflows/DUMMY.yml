@@ -5,7 +5,7 @@ on:
 
 jobs:
   work:
-    runs-on: ubuntu-slim
+    runs-on: self-hosted
     timeout-minutes: 1
       
     steps:
