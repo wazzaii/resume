@@ -1,0 +1,13 @@
+name: Dummy POC for locally hosted github runners
+
+on:
+  workflow_dispatch:
+
+jobs:
+  work:
+    runs-on: blacksmith-2vcpu-ubuntu-2404-arm # Drop-in swap 
+    timeout-minutes: 1
+      
+    steps:
+      - name: Print hello world 
+        run: echo "hello world"
