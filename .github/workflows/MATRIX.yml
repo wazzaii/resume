@@ -4,32 +4,29 @@ on:
   workflow_dispatch:
     inputs:
       jobs:
-        description: Number of parallel DUMMY workflow runs
+        description: Number of parallel jobs
         required: true
         default: "100"
-        type: string
 
 jobs:
-  generate-matrix:
+  matrix:
     runs-on: ubuntu-latest
-
     outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      jobs: ${{ steps.gen.outputs.jobs }}
 
     steps:
-      - id: matrix
+      - id: gen
         run: |
           COUNT=${{ inputs.jobs }}
-          echo "matrix=$(jq -cn --argjson n "$COUNT" '[range(1; $n + 1) | {}]')" >> "$GITHUB_OUTPUT"
+          echo "jobs=$(jq -cn --argjson n "$COUNT" '[range(1; $n+1)]')" >> "$GITHUB_OUTPUT"
 
   stress:
-    needs: generate-matrix
+    needs: matrix
 
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+        job: ${{ fromJson(needs.matrix.outputs.jobs) }}
 
     uses: ./.github/workflows/DUMMY.yml
-
     secrets: inherit
