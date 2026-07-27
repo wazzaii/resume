@@ -1,13 +1,59 @@
-name: Dummy POC for locally hosted github runners
+name: DUMMY
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  work:
+  curl:
     runs-on: self-hosted
-    timeout-minutes: 1
-      
+    timeout-minutes: 10
+
     steps:
-      - name: Print hello world 
-        run: echo "hello world"
+      - name: Install curl (if needed)
+        run: |
+          command -v curl || sudo apt-get update && sudo apt-get install -y curl
+
+      - name: Hit public endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          URLS=(
+            "https://wttr.in/?format=3"
+            "https://wttr.in/London?format=3"
+            "https://cheat.sh/git/rebase"
+            "https://cheat.sh/docker"
+            "https://httpbin.org/get"
+            "https://httpbin.org/uuid"
+            "https://httpbin.org/ip"
+            "https://httpbin.org/user-agent"
+            "https://httpbin.org/headers"
+            "https://httpbin.org/delay/1"
+            "https://jsonplaceholder.typicode.com/posts/1"
+            "https://jsonplaceholder.typicode.com/posts/2"
+            "https://jsonplaceholder.typicode.com/users/1"
+            "https://jsonplaceholder.typicode.com/todos/1"
+            "https://api.github.com"
+            "https://api.github.com/zen"
+            "https://icanhazip.com"
+            "https://ifconfig.me"
+            "https://worldtimeapi.org/api/ip"
+            "https://catfact.ninja/fact"
+          )
+
+          # Randomize the order
+          printf "%s\n" "${URLS[@]}" | shuf | while read -r url; do
+            echo "==> $url"
+
+            curl \
+              --fail \
+              --location \
+              --silent \
+              --show-error \
+              --max-time 15 \
+              --output /dev/null \
+              --write-out "HTTP %{http_code} | %{time_total}s\n" \
+              "$url"
+
+            sleep 0.25
+          done
