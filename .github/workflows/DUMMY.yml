@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Make sure cURL is installed
         run: |
-          curl -v 
+          curl --help
 
       - name: Hit public endpoints
         shell: bash
