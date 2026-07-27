@@ -21,7 +21,7 @@ jobs:
           URLS=(
             "https://wttr.in/?format=3"
             "https://wttr.in/London?format=3"
-            "https://cheat.sh/git/rebase"
+            "https://cheat.sh/git"
             "https://cheat.sh/docker"
             "https://httpbin.org/get"
             "https://httpbin.org/uuid"
