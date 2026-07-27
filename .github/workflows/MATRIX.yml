@@ -1,0 +1,35 @@
+name: Runner Stress Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      jobs:
+        description: Number of parallel DUMMY workflow runs
+        required: true
+        default: "100"
+        type: string
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+
+    steps:
+      - id: matrix
+        run: |
+          COUNT=${{ inputs.jobs }}
+          echo "matrix=$(jq -cn --argjson n "$COUNT" '[range(1; $n + 1) | {}]')" >> "$GITHUB_OUTPUT"
+
+  stress:
+    needs: generate-matrix
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
+    uses: ./.github/workflows/DUMMY.yml
+
+    secrets: inherit
