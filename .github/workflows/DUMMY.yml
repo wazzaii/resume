@@ -37,7 +37,6 @@ jobs:
             "https://api.github.com/zen"
             "https://icanhazip.com"
             "https://ifconfig.me"
-            "https://worldtimeapi.org/api/ip"
             "https://catfact.ninja/fact"
           )
 
