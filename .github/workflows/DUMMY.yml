@@ -9,9 +9,9 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Install curl (if needed)
+      - name: Make sure cURL is installed
         run: |
-          command -v curl || sudo apt-get update && sudo apt-get install -y curl
+          curl -v 
 
       - name: Hit public endpoints
         shell: bash
